@@ -18,12 +18,6 @@ const getSecretResult = (secret?: SecretsStoreSecret) => {
 };
 
 export const resolveCredentials = (env: WorkerEnv) =>
-	ResultAsync.combine([
-		getSecretResult(env.OPENAI_API_KEY),
-		getSecretResult(env.ANTHROPIC_API_KEY),
-		getSecretResult(env.GITHUB_TOKEN),
-	]).map(([openAiKey, anthropicKey, githubToken]) => ({
-		...(openAiKey ? { OPENAI_API_KEY: openAiKey } : {}),
-		...(anthropicKey ? { ANTHROPIC_API_KEY: anthropicKey } : {}),
-		...(githubToken ? { GITHUB_TOKEN: githubToken } : {}),
+	ResultAsync.combine([getSecretResult(env.ZAI_API_KEY)]).map(([zaiApiKey]) => ({
+		...(zaiApiKey ? { ZAI_API_KEY: zaiApiKey } : {}),
 	}));

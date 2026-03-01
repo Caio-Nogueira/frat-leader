@@ -1,0 +1,38 @@
+{
+	"name": "dash",
+	"version": "0.1.0",
+	"private": true,
+	"sideEffects": false,
+	"type": "module",
+	"scripts": {
+		"build": "run-vite-build",
+		"check:lint": "run-eslint",
+		"check:types": "run-tsc",
+		"check:workers-types": "run-wrangler-types --check",
+		"deploy": "run-wrangler-deploy",
+		"deploy:dry-run": "run-wrangler-deploy --dry-run",
+		"dev": "run-vite-dev",
+		"fix:workers-types": "run-wrangler-types",
+		"preview": "run-vite-preview",
+		"test": "run-vitest"
+	},
+	"dependencies": {
+		"react": "19.1.1",
+		"react-dom": "19.1.1"
+	},
+	"devDependencies": {
+		"@cloudflare/vite-plugin": "^1.9.2",
+		"@cloudflare/vitest-pool-workers": "^0.12.4",
+		"@repo/eslint-config": "workspace:*",
+		"@repo/tools": "workspace:*",
+		"@repo/typescript-config": "workspace:*",
+		"@types/node": "22.15.27",
+		"@types/react": "19.1.8",
+		"@types/react-dom": "19.1.6",
+		"@vitejs/plugin-react": "5.0.0",
+		"typescript": "^5.5.2",
+		"vite": "^6.3.4",
+		"vitest": "~3.2.0",
+		"wrangler": "^4.69.0"
+	}
+}

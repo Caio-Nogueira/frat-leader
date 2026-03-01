@@ -24,6 +24,9 @@ export type StartSidecarRequest = {
 export type SidecarHealthResponse = {
 	running: boolean;
 	startedAt: string | null;
+	stoppedAt?: string | null;
+	startCount?: number;
+	stopCount?: number;
 };
 
 export type SessionRow = {
@@ -50,9 +53,7 @@ export type WorkerEnv = {
 	SESSIONS_DB: D1Database;
 	SANDBOX_SIDECAR: DurableObjectNamespace;
 	SANDBOX_SPAWN_WORKFLOW: Workflow<SpawnWorkflowParams>;
-	OPENAI_API_KEY?: SecretsStoreSecret;
-	ANTHROPIC_API_KEY?: SecretsStoreSecret;
-	GITHUB_TOKEN?: SecretsStoreSecret;
+	ZAI_API_KEY?: SecretsStoreSecret;
 	SANDBOX_IMAGE?: string;
 };
 

@@ -3,7 +3,8 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"deploy": "wrangler deploy",
+		"deploy": "WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler deploy",
+		"deploy:dry-run": "WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler deploy --dry-run",
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
 		"test": "vitest",

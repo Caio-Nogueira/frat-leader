@@ -7,6 +7,8 @@
 		"check:deps": "runx check --deps",
 		"check:format": "runx check --format",
 		"check:lint:all": "run-eslint",
+		"deploy": "WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log turbo run deploy",
+		"deploy:dry-run": "WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log turbo run deploy:dry-run",
 		"test": "vitest",
 		"test:ci": "run-vitest-ci"
 	},

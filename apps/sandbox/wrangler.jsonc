@@ -8,73 +8,66 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2025-09-27",
 	"observability": {
-		"enabled": true
+		"enabled": true,
 	},
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
+	"compatibility_flags": ["nodejs_compat"],
 	"dev": {
-		"enable_containers": false
+		"enable_containers": true,
 	},
 	"vars": {
-		"SANDBOX_IMAGE": "docker.io/library/node:22"
+		"SANDBOX_IMAGE": "./Dockerfile",
 	},
 	"d1_databases": [
 		{
 			"binding": "SESSIONS_DB",
 			"database_name": "sandbox-sessions",
 			"database_id": "00000000-0000-0000-0000-000000000001",
-			"preview_database_id": "00000000-0000-0000-0000-000000000001"
-		}
+			"preview_database_id": "00000000-0000-0000-0000-000000000001",
+		},
 	],
 	"durable_objects": {
 		"bindings": [
 			{
 				"name": "SANDBOX_SIDECAR",
-				"class_name": "SandboxContainerSidecar"
-			}
-		]
+				"class_name": "SandboxContainerSidecar",
+			},
+		],
 	},
 	"workflows": [
 		{
 			"binding": "SANDBOX_SPAWN_WORKFLOW",
 			"name": "sandbox-spawn-workflow",
-			"class_name": "SandboxSpawnWorkflow"
-		}
+			"class_name": "SandboxSpawnWorkflow",
+		},
 	],
 	"secrets_store_secrets": [
 		{
-			"binding": "OPENAI_API_KEY",
-			"store_id": "replace-me",
-			"secret_name": "OPENAI_API_KEY"
+			"binding": "ZAI_API_KEY",
+			// "store_id": "c54b857ba2df477c869ae0eb0b369f15",
+			"store_id": "test-ss",
+			"secret_name": "ZAI_API_KEY"
 		},
-		{
-			"binding": "ANTHROPIC_API_KEY",
-			"store_id": "replace-me",
-			"secret_name": "ANTHROPIC_API_KEY"
-		},
-		{
-			"binding": "GITHUB_TOKEN",
-			"store_id": "replace-me",
-			"secret_name": "GITHUB_TOKEN"
-		}
+		// {
+		// 	"binding": "GITHUB_TOKEN",
+		// 	"store_id": "replace-me",
+		// 	"secret_name": "GITHUB_TOKEN"
+		// }
 	],
 	"containers": [
 		{
+			"name": "frat-leader-sandbox",
 			"class_name": "SandboxContainerSidecar",
-			"image": "docker.io/library/node:22",
+			"image": "./Dockerfile",
 			"max_instances": 30,
-			"instance_type": "lite"
-		}
+			"instance_type": "lite",
+		},
 	],
 	"migrations": [
 		{
 			"tag": "v1-sandbox-sidecar",
-			"new_sqlite_classes": [
-				"SandboxContainerSidecar"
-			]
-		}
-	]
+			"new_sqlite_classes": ["SandboxContainerSidecar"],
+		},
+	],
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

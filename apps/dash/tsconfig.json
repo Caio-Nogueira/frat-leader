@@ -1,0 +1,7 @@
+{
+	"extends": "@repo/typescript-config/workers.json",
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"lib": ["es2022", "dom", "dom.iterable"]
+	}
+}

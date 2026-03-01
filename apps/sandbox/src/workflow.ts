@@ -1,16 +1,12 @@
-import { WorkflowEntrypoint } from 'cloudflare:workers';
 import type { WorkflowEvent, WorkflowStep } from 'cloudflare:workers';
+import { WorkflowEntrypoint } from 'cloudflare:workers';
 
-import {
-	DEFAULT_SANDBOX_IMAGE,
-	WORKFLOW_HEALTHCHECK_COUNT,
-	WORKFLOW_HEALTHCHECK_INTERVAL,
-} from './constants';
+import { DEFAULT_SANDBOX_IMAGE, WORKFLOW_HEALTHCHECK_COUNT, WORKFLOW_HEALTHCHECK_INTERVAL } from './constants';
 import { ensureSchema, updateSessionStatus, upsertSession } from './db';
-import type { AppError, SidecarHealthResponse, SpawnWorkflowParams, WorkerEnv } from './types';
 import { nowIso } from './result';
 import { resolveCredentials } from './secrets';
 import { healthcheckSidecar, startSidecar } from './sidecar-rpc';
+import type { AppError, SidecarHealthResponse, SpawnWorkflowParams, WorkerEnv } from './types';
 
 export class SandboxSpawnWorkflow extends WorkflowEntrypoint<WorkerEnv, SpawnWorkflowParams> {
 	async run(event: Readonly<WorkflowEvent<SpawnWorkflowParams>>, step: WorkflowStep) {
@@ -48,58 +44,53 @@ export class SandboxSpawnWorkflow extends WorkflowEntrypoint<WorkerEnv, SpawnWor
 					(result: Record<string, string>) => result,
 					(error: AppError) => {
 						throw new Error(error.message);
-					},
-				),
+					}
+				)
 			);
+
+			if (!credentials.ZAI_API_KEY) {
+				// no need to retry - if no credentials then we don't provision
+				throw new Error('Missing credentials: configure ZAI_API_KEY in Secrets Store');
+			}
 
 			const start = await step.do('start sidecar container', async () =>
 				startSidecar(this.env, params, credentials).match(
 					(result: SidecarHealthResponse) => result,
 					(error: AppError) => {
+						console.error(error);
 						throw new Error(error.message);
-					},
-				),
+					}
+				)
 			);
 
-			const runningSessionResult = await updateSessionStatus(
-				this.env.SESSIONS_DB,
-				params.sessionId,
-				'running',
-				{
-					lastHealthStatus: start.running ? 'healthy' : 'unhealthy',
-					lastHealthcheckAt: nowIso(),
-					error: null,
-				},
-			);
+			const runningSessionResult = await updateSessionStatus(this.env.SESSIONS_DB, params.sessionId, 'running', {
+				lastHealthStatus: start.running ? 'healthy' : 'unhealthy',
+				lastHealthcheckAt: nowIso(),
+				error: null,
+			});
 			if (runningSessionResult.isErr()) {
 				throw new Error(runningSessionResult.error.message);
 			}
 
 			for (let checkIndex = 0; checkIndex < WORKFLOW_HEALTHCHECK_COUNT; checkIndex += 1) {
-				await step.sleep(
-					`sleep before healthcheck #${checkIndex + 1}`,
-					WORKFLOW_HEALTHCHECK_INTERVAL,
-				);
+				await step.sleep(`sleep before healthcheck #${checkIndex + 1}`, WORKFLOW_HEALTHCHECK_INTERVAL);
 
-				const health = await step.do(`healthcheck #${checkIndex + 1}`, async () =>
-					healthcheckSidecar(this.env, params.sessionId).match(
+				const health = await step.do(`healthcheck`, async () => {
+					console.log('healthchecking');
+					return healthcheckSidecar(this.env, params.sessionId).match(
 						(result: SidecarHealthResponse) => result,
 						(error: AppError) => {
+							console.error(error);
 							throw new Error(error.message);
-						},
-					),
-				);
+						}
+					);
+				});
 
-				const persist = await updateSessionStatus(
-					this.env.SESSIONS_DB,
-					params.sessionId,
-					'waiting',
-					{
-						lastHealthStatus: health.running ? 'healthy' : 'unhealthy',
-						lastHealthcheckAt: nowIso(),
-						error: null,
-					},
-				);
+				const persist = await updateSessionStatus(this.env.SESSIONS_DB, params.sessionId, 'waiting', {
+					lastHealthStatus: health.running ? 'healthy' : 'unhealthy',
+					lastHealthcheckAt: nowIso(),
+					error: null,
+				});
 
 				if (persist.isErr()) {
 					throw new Error(persist.error.message);
