@@ -1,0 +1,106 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "sandbox",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-09-27",
+	"observability": {
+		"enabled": true
+	},
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"dev": {
+		"enable_containers": false
+	},
+	"vars": {
+		"SANDBOX_IMAGE": "docker.io/library/node:22"
+	},
+	"d1_databases": [
+		{
+			"binding": "SESSIONS_DB",
+			"database_name": "sandbox-sessions",
+			"database_id": "00000000-0000-0000-0000-000000000001",
+			"preview_database_id": "00000000-0000-0000-0000-000000000001"
+		}
+	],
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "SANDBOX_SIDECAR",
+				"class_name": "SandboxContainerSidecar"
+			}
+		]
+	},
+	"workflows": [
+		{
+			"binding": "SANDBOX_SPAWN_WORKFLOW",
+			"name": "sandbox-spawn-workflow",
+			"class_name": "SandboxSpawnWorkflow"
+		}
+	],
+	"secrets_store_secrets": [
+		{
+			"binding": "OPENAI_API_KEY",
+			"store_id": "replace-me",
+			"secret_name": "OPENAI_API_KEY"
+		},
+		{
+			"binding": "ANTHROPIC_API_KEY",
+			"store_id": "replace-me",
+			"secret_name": "ANTHROPIC_API_KEY"
+		},
+		{
+			"binding": "GITHUB_TOKEN",
+			"store_id": "replace-me",
+			"secret_name": "GITHUB_TOKEN"
+		}
+	],
+	"containers": [
+		{
+			"class_name": "SandboxContainerSidecar",
+			"image": "docker.io/library/node:22",
+			"max_instances": 30,
+			"instance_type": "lite"
+		}
+	],
+	"migrations": [
+		{
+			"tag": "v1-sandbox-sidecar",
+			"new_sqlite_classes": [
+				"SandboxContainerSidecar"
+			]
+		}
+	]
+	/**
+	 * Smart Placement
+	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+	 */
+	// "placement": {  "mode": "smart" }
+	/**
+	 * Bindings
+	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
+	 * databases, object storage, AI inference, real-time communication and more.
+	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+	 */
+	/**
+	 * Environment Variables
+	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+	 * Note: Use secrets to store sensitive data.
+	 * https://developers.cloudflare.com/workers/configuration/secrets/
+	 */
+	// "vars": {  "MY_VARIABLE": "production_value" }
+	/**
+	 * Static Assets
+	 * https://developers.cloudflare.com/workers/static-assets/binding/
+	 */
+	// "assets": {  "directory": "./public/",  "binding": "ASSETS" }
+	/**
+	 * Service Bindings (communicate between multiple Workers)
+	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
+	 */
+	// "services": [  {   "binding": "MY_SERVICE",   "service": "my-service"  } ]
+}
