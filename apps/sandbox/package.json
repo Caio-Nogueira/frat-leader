@@ -9,6 +9,11 @@
 		"test": "vitest",
 		"cf-typegen": "wrangler types"
 	},
+	"dependencies": {
+		"hono": "4.9.11",
+		"neverthrow": "^8.2.0",
+		"workers-qb": "^1.13.0"
+	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.12.4",
 		"@types/node": "22.15.27",

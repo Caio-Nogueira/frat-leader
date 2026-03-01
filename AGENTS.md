@@ -74,6 +74,7 @@
 - ALWAYS prefer editing existing files over creating new ones
 - NEVER proactively create documentation files unless explicitly requested
 - When editing files, preserve existing indentation and code style
+- For worker-api implementations, default to Hono routing, keep shared app/domain types in `src/types.ts`, and use `neverthrow` to propagate errors across RPC and HTTP boundaries
 </critical-notes>
 
 <context-specific-rules>

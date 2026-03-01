@@ -55,6 +55,16 @@ importers:
         version: 3.2.4(@types/node@22.15.27)(jiti@2.6.1)(lightningcss@1.29.2)(tsx@4.20.6)(yaml@2.8.1)
 
   apps/sandbox:
+    dependencies:
+      hono:
+        specifier: 4.9.11
+        version: 4.9.11
+      neverthrow:
+        specifier: ^8.2.0
+        version: 8.2.0
+      workers-qb:
+        specifier: ^1.13.0
+        version: 1.13.0
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.12.4
@@ -3424,6 +3434,10 @@ packages:
     resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
     engines: {node: '>= 0.4.0'}
 
+  neverthrow@8.2.0:
+    resolution: {integrity: sha512-kOCT/1MCPAxY5iUV3wytNFUMUolzuwd/VF/1KCx7kf6CutrOsTie+84zTGTpgQycjvfLdBBdvBvFLqFD2c0wkQ==}
+    engines: {node: '>=18'}
+
   no-case@2.3.2:
     resolution: {integrity: sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==}
 
@@ -4460,6 +4474,9 @@ packages:
     resolution: {integrity: sha512-JkhfCLU+w+KbQmZ9k49IcDYc78GBo7eG8Mir8E2+KVjR7otQAmpcLlsous09YLh8WQ3Bt3Mi6/WMStvMAPukeA==}
     engines: {node: '>=16'}
     hasBin: true
+
+  workers-qb@1.13.0:
+    resolution: {integrity: sha512-34g9SGgSfkTmIOSFYflTcoPvPe6/7VAwuPo+NM0aMCE1AVhum0X/Jb4Z9GGlssQ0UmYhcVjgM+5QDkntI3VKdA==}
 
   workers-tagged-logger@1.0.0:
     resolution: {integrity: sha512-tp5PAs48hSpF2GIbH0S186MBXuMe8u9uuHZR0Jmw/I8+NIiQblor5EpYJ5lOaE8u9s84mVme6Iv+ueC1C/beog==}
@@ -7812,6 +7829,10 @@ snapshots:
 
   netmask@2.0.2: {}
 
+  neverthrow@8.2.0:
+    optionalDependencies:
+      '@rollup/rollup-linux-x64-gnu': 4.35.0
+
   no-case@2.3.2:
     dependencies:
       lower-case: 1.1.4
@@ -9087,6 +9108,8 @@ snapshots:
       '@cloudflare/workerd-linux-64': 1.20260305.0
       '@cloudflare/workerd-linux-arm64': 1.20260305.0
       '@cloudflare/workerd-windows-64': 1.20260305.0
+
+  workers-qb@1.13.0: {}
 
   workers-tagged-logger@1.0.0:
     dependencies:
